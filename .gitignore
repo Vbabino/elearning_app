@@ -62,3 +62,9 @@ Pipfile.lock
 
 .hypothesis
 .pytest_cache
+Backend/data.json
+Backend/groups.json
+Backend/contenttypes.json
+Backend/permissions.json
+
+Backend/users.json
