@@ -167,4 +167,4 @@ This will execute all Django tests, including API, serializers, and WebSocket te
 
 ## Author
 
-Vittorio Babino
+Giuseppe Babino
