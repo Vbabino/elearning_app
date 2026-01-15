@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "feedback",
     "notifications",
     "corsheaders",
+    "silk"
 ]
 
 
@@ -97,6 +98,7 @@ EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "email_simulation")
 
 MIDDLEWARE = [
+    "silk.middleware.SilkyMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -194,6 +196,11 @@ USE_TZ = True
 STATIC_URL = "static/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

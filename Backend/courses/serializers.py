@@ -13,6 +13,9 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def get_is_enrolled(self, obj):
         """Check if the authenticated user is enrolled in this course."""
+        if hasattr(obj, 'is_enrolled_annotated'):
+            return obj.is_enrolled_annotated
+        
         request = self.context.get("request")
         if request and hasattr(request, "user"):
             return Enrollment.objects.filter(

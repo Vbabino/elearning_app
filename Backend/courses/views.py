@@ -15,7 +15,7 @@ from user_permissions.user_permissions import IsTeacher, IsStudent
 from courses.filters import CourseFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import get_object_or_404
-
+from django.db.models import Exists, OuterRef
 
 class CourseListView(generics.ListCreateAPIView):
     """Teachers can create and view their own courses."""
@@ -55,11 +55,17 @@ class CourseListViewForStudents(generics.ListAPIView):
     permission_classes = [IsStudent]
 
     def get_queryset(self):
-        """Return courses the authenticated student is enrolled in."""
         user = self.request.user
-        return Course.objects.filter(
-            enrolled_students__student=user, enrolled_students__is_active=True
+        # Define the check for an active enrollment
+        enrollment_exists = Enrollment.objects.filter(
+            student=user,
+            course=OuterRef('pk'),
+            is_active=True
         )
+        return Course.objects.filter(
+            enrolled_students__student=user,
+            enrolled_students__is_active=True
+        ).annotate(is_enrolled_annotated=Exists(enrollment_exists))
 
     def list(self, request, *args, **kwargs):
         """Return a custom response when no enrollments are found."""
@@ -201,7 +207,9 @@ class TeacherEnrolledStudentsView(generics.ListAPIView):
             self.request.user.is_authenticated
             and self.request.user.user_type == "teacher"
         ):
-            return Enrollment.objects.filter(course__teacher=self.request.user)
+            return Enrollment.objects.filter(
+                course__teacher=self.request.user
+            ).select_related("student", "course")
         return Enrollment.objects.none()
 
     @extend_schema(
