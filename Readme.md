@@ -6,6 +6,12 @@ This eLearning platform enables teachers to create courses, upload materials, ma
 
 ---
 
+## Architecture
+
+![Architecture](./architecture.png)
+
+---
+
 ## Project Structure
 
 ```
